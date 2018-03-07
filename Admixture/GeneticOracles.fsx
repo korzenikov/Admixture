@@ -1,4 +1,6 @@
-﻿open System
+﻿#r @"D:\Repos\Admixture\Admixture\packages\GAF.2.3.1\lib\net461\GAF.461.dll"
+
+open System
 open System.IO
 open GAF
 open GAF.Operators
@@ -53,7 +55,7 @@ type K36 =
         | West_Caucasian
         | WestMed
 
-let path = @"k36_v1_dots.txt"
+let path = @"D:\Repos\Admixture\Admixture\k36_v1_dots.txt"
 
 let lines = File.ReadAllLines(path) 
 
@@ -65,13 +67,7 @@ let populations =
     |> Array.map (split >> population)
 
 let distance (p1: float[]) (p2: float[]) = (p1, p2) ||> Array.map2 (fun p1 p2 -> (p1 - p2)*(p1 - p2)) |> Array.sum
- 
-let closestSamples pops n (unknown:float[]) = 
-  pops 
-    |> Seq.map (fun x -> x, distance x.Components unknown)
-    |> Seq.sortBy snd
-    |> Seq.take n 
-    |> Seq.map (fun (p, d) -> p, Math.Sqrt(d))
+
 
 let convertToArray c = 
     let map = c |> Seq.map (fun (c, v) -> c.ToString(), v) |> Map.ofSeq 
@@ -124,10 +120,23 @@ let Oxon =
         VolgaUral, 2.15
     ]
 
+let WindBringer = 
+    [
+        East_Central_Euro, 25.38
+        Eastern_Euro, 20.79
+        Fennoscandian, 12.03
+        North_Sea, 8.62
+        Iberian, 7.63
+        Central_Euro,  7.29
+        East_Balkan, 6.93
+        French, 3.59
+        VolgaUral, 2.95
+        North_Caucasian, 2.88
+        North_Atlantic, 1.71
+        Central_African, 0.21
+    ]
 
-
-let sample = Andrei |> convertToArray
-
+let sample = WindBringer |> convertToArray
 
 let pop = new GAF.Population()
 
@@ -139,10 +148,9 @@ for p in 0 .. populations.Length - 1 do
 let elite = new Elite(1)
 
 let crossover = new Crossover(0.8)
-crossover.CrossoverType <- CrossoverType.DoublePoint
+crossover.CrossoverType <- CrossoverType.SinglePoint
 
 let mutate = new BinaryMutate(0.02)
-
 
 let getPopulationsFromChromosome (ch:Chromosome) =
     ch.Genes |> Seq.map (fun x -> populations.[Math.Abs((int)x.RealValue) % populations.Length])
@@ -177,3 +185,5 @@ ga.Operators.Add(crossover)
 ga.Operators.Add(mutate)
 
 ga.Run(new TerminateFunction(fun _ g _ -> g > 1000))
+
+ //populations |> Array.indexed  |> Array.where (fun (i, x) -> x.Label.StartsWith("Russia")) 
