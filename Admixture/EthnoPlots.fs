@@ -30,7 +30,15 @@ let getTransform data =
     pca.NumberOfOutputs <- 2;
     pca.Learn(data) 
 
-let getClusters (k:int) data =
+let getTransform3D data =
+    let pca = new PrincipalComponentAnalysis()
+
+    pca.Method <- PrincipalComponentMethod.Standardize
+    pca.Whiten <- true
+    pca.NumberOfOutputs <- 3;
+    pca.Learn(data) 
+
+let getClustering (k:int) data =
     Accord.Math.Random.Generator.Seed <- new System.Nullable<int>(0);
     
     let kmeans = BalancedKMeans k
@@ -61,15 +69,15 @@ let showEthnoPlot k scaleX scaleY components populations =
 
     let output = data |> transform.Transform |> getPoints scaleX scaleY
 
-    let clusters = data |> getClusters k
+    let clustering = data |> getClustering k
  
-    let clusterLabels = data |> clusters.Decide
+    let clusters = data |> clustering.Decide
 
-    let labels = populations |> Array.map (fun x -> x.Label)  |> Array.map (fun x -> abbreviations |> Seq.fold (fun (acc : string) (l, s) -> acc.Replace(l, s)) x)
+    let labels = populations |> Array.map (fun x -> x.Label) |> Array.map (fun x -> abbreviations |> Seq.fold (fun (acc : string) (l, s) -> acc.Replace(l, s)) x)
     
     let cPoints = cdata |> transform.Transform |> getPoints scaleX scaleY
 
-    (output, clusterLabels)
+    (output, clusters)
     ||> getCharts labels 
     |> Seq.map snd
     |> Seq.append
@@ -80,6 +88,20 @@ let showEthnoPlot k scaleX scaleY components populations =
     |> Chart.WithXAxis(MajorGrid = ChartTypes.Grid(Enabled=false)) 
     |> Chart.WithYAxis(MajorGrid = ChartTypes.Grid(Enabled=false))
     |> Chart.Show
+
+let showEthnoPlot3D k populations =
+
+    let data = populations |> Array.map (fun x -> x.Components)
+    
+    let transform = data |> getTransform3D
+
+    let clustering = data |> getClustering k
+
+    let clusters = data |> clustering.Decide
+
+    let labels = populations |> Array.map (fun x -> x.Label) |> Array.map (fun x -> abbreviations |> Seq.fold (fun (acc : string) (l, s) -> acc.Replace(l, s)) x)
+
+    data |> transform.Transform |> Array.mapi (fun i x -> labels.[i], x.[0], x.[1], x.[2], clusters.[i])
 
 let showEthnoPlotByClusters k populations =
 
@@ -93,15 +115,14 @@ let showEthnoPlotByClusters k populations =
 
     let output = data |> transform.Transform |> getPoints scaleX scaleY
 
-    let clusters = data |> getClusters k
+    let clustering = data |> getClustering k
  
-    let clusterLabels = data |> clusters.Decide
+    let clusters = data |> clustering.Decide
 
-
-    let labels = populations |> Array.map (fun x -> x.Label)  |> Array.map (fun x -> abbreviations |> Seq.fold (fun (acc : string) (l, s) -> acc.Replace(l, s)) x)
+    let labels = populations |> Array.map (fun x -> x.Label) //|> Array.map (fun x -> abbreviations |> Seq.fold (fun (acc : string) (l, s) -> acc.Replace(l, s)) x)
 
     
-    (output, clusterLabels)
+    (output, clusters)
     ||> getCharts labels
     |> Seq.sortBy fst
     |> Seq.iter (fun (k, c) -> 
@@ -119,9 +140,9 @@ let showSamplesOnEthnoPlot k populations (samples:seq<float[]>) =
 
     let output = data |> transform.Transform |> getPoints 1.0 1.0
 
-    let clusters = data |> getClusters k
+    let clustering = data |> getClustering k
  
-    let clusterLabels = data |> clusters.Decide
+    let clusters = data |> clustering.Decide
 
     let sampleData = samples |> Seq.toArray
 
@@ -129,7 +150,7 @@ let showSamplesOnEthnoPlot k populations (samples:seq<float[]>) =
 
     let labels = populations |> Array.map (fun x -> x.Label)  |> Array.map (fun x -> abbreviations |> Seq.fold (fun (acc : string) (l, s) -> acc.Replace(l, s)) x)
     
-    let populationCharts = (output, clusterLabels) ||> getCharts labels |> Seq.map snd
+    let populationCharts = (output, clusters) ||> getCharts labels |> Seq.map snd
 
     let samplePoints =
         sampleOutput |> Seq.map (fun x -> x.[0], x.[1])
@@ -145,28 +166,54 @@ let showSamplesOnEthnoPlot k populations (samples:seq<float[]>) =
     |> Chart.WithXAxis(MajorGrid = ChartTypes.Grid(Enabled=false)) |> Chart.WithYAxis(MajorGrid = ChartTypes.Grid(Enabled=false))
     |> Chart.Show
 
+
+let showSamplesOnEthnoPlot3D k populations  (samples:seq<float[]>) =
+
+    let data = populations |> Array.map (fun x -> x.Components)
+    
+    let transform = data |> getTransform3D
+
+    let clustering = data |> getClustering k
+
+    let clusters = data |> clustering.Decide
+
+    let sampleData = samples |> Seq.toArray
+
+    let sampleClusters = sampleData |> clustering.Decide
+
+    let sampleLabels =
+        sampleData |> Array.mapi (fun i _ -> sprintf "Test Person %d" ( i + 1))
+
+    let labels = populations |> Array.map (fun x -> x.Label) |> Array.map (fun x -> abbreviations |> Seq.fold (fun (acc : string) (l, s) -> acc.Replace(l, s)) x)
+
+    let populationOutput = data |> transform.Transform |> Array.mapi (fun i x -> labels.[i], x.[0], x.[1], x.[2], clusters.[i])
+
+    let sampleOutput = sampleData |> transform.Transform |> Array.mapi (fun i x -> sampleLabels.[i], x.[0], x.[1], x.[2], sampleClusters.[i])
+
+    sampleOutput |> Seq.append populationOutput
+
 let showSamplesOnEthnoPlotOwnClustersOnly k populations (samples:seq<float[]>) =
 
     let data = populations |> Array.map (fun x -> x.Components)
 
-    let transform = getTransform data
+    let transform = data |> getTransform
 
     let output = data |> transform.Transform |> getPoints 1.0 1.0
 
-    let clusters = data |> getClusters k
+    let clustering = data |> getClustering k
  
-    let clusterLabels = data |> clusters.Decide
+    let clusters = data |> clustering.Decide
 
     let sampleData = samples |> Seq.toArray
 
     let sampleOutput = sampleData |> transform.Transform |> getPoints 1.0 1.0
 
-    let sampleClusters = sampleData |> clusters.Decide
+    let sampleClusters = sampleData |> clustering.Decide
 
     let labels = populations |> Array.map (fun x -> x.Label)
 
     let populationCharts = 
-        (output, clusterLabels) 
+        (output, clusters) 
         ||> getCharts labels
         |> Seq.where (fun (k, _) -> sampleClusters |> Seq.contains k) |> Seq.map snd
 
