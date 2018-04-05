@@ -7,15 +7,21 @@
 
 #load "Populations.fs"
 #load "EthnoPlots.fs"
+#load "K36.fs"
 
+open System
 open Admixture.Populations
 open Admixture.EthnoPlots
+open Admixture.K36
 
 let components, populations = getPopulations ',' "D:\Populations\K15.csv"
 
-(components, populations) ||> showEthnoPlot 5 -1.0 -0.25
+populations |> showEthnoPlot3D 6 
+    |> Seq.iter (fun (label, x, y, z, c) -> printfn "%d,\"%s\",%f,%f,%f" c label x y z)
 
-populations |> showEthnoPlotByClusters 5
+//(components, populations) ||> showEthnoPlot 5 -1.0 -1.0
+
+//populations |> showEthnoPlotByClusters 5
 
 let testPersonK13 = 
     [|
@@ -216,145 +222,17 @@ let testPerson3K36 =
 
 //(populations, testPersonK13) ||> showEthnoPlotSampleClusterOnly 5
 
-[testPersonK15; testPerson2K15; testPerson3K15] |> showSamplesOnEthnoPlot 5 populations
+//[testPersonK15; testPerson2K15; testPerson3K15] |> showSamplesOnEthnoPlot 5 populations
 
-[testPersonK15; testPerson2K15; testPerson3K15] |> showSamplesOnEthnoPlotOwnClustersOnly 5 populations
+//[testPersonK15; testPerson2K15; testPerson3K15] |> showSamplesOnEthnoPlotOwnClustersOnly 5 populations
 
 //[testPersonK36; testPerson2K36; testPerson3K36] |> showSamplesOnEthnoPlot 5 populations
 
 //[testPersonK36; testPerson2K36; testPerson3K36] |> showSamplesOnEthnoPlotOwnClustersOnly 5 populations
 
 
-let son =
-    [|
-        0.28
-        0.0
-        0.0
-        0.0
-        0.0
-        6.58
-        0.0
-        0.0
-        6.09
-        0.0
-        28.15
-        0.0
-        22.61
-        13.13
-        0.0
-        7.29
-        0.0
-        4.45
-        0.0
-        0.0
-        0.0
-        3.74
-        0.34
-        4.05
-        0.0
-        0.0
-        0.0
-        0.0
-        0.0
-        0.24
-        0.26
-        0.0
-        2.76
-        0.0
-        0.0
-        0.0
-    |]
+//[testPersonK36; testPerson2K36] |> showSamplesOnEthnoPlot3D 6 populations
+//    |> Seq.iter (fun (label, x, y, z, c) -> printfn "%d,\"%s\",%f,%f,%f" c label x y z)
 
-let father =
-    [|
-        0.63
-        0.0
-        1.21
-        0.0
-        0.0
-        8.59
-        0.0
-        0.0
-        6.4
-        0.0
-        25.37
-        0.0
-        20.59
-        9.61
-        0.0
-        4.87
-        0.0
-        5.06
-        0.0
-        0.0
-        0.0
-        4.66
-        5.33
-        5.53
-        0.0
-        0.15
-        0.0
-        0.0
-        0.0
-        0.0
-        0.1
-        0.0
-        1.86
-        0.0
-        0.0
-        0.0
-    |]
-
-let mother =
-    [|
-        0.0
-        0.0
-        0.0
-        0.0
-        0.0
-        5.61
-        0.0
-        0.0
-        7.89
-        0.0
-        25.5
-        0.0
-        19.4
-        15.34
-        1.68
-        5.77
-        0.0
-        3.4
-        0.0
-        0.0
-        0.0
-        4.82
-        0.0
-        5.36
-        0.0
-        0.0
-        0.0
-        0.0
-        0.0
-        1.82
-        0.0
-        0.0
-        3.41
-        0.0
-        0.0
-        0.0
-    |]
-
-
-[son; father; mother] |> showEthnoPlotSampleClusterOnly 5 populations
-
-Seq.zip3 son father mother
-|> Seq.map (fun (s, f, m) -> System.Math.Abs(s - (f+m)/2.0)) 
-|> Seq.toArray
-
-
-
-
-
-//(populations, testPerson2) ||> showEthnoPlotSampleClusterOnly 5
-
+[testPersonK15; testPerson2K15] |> showSamplesOnEthnoPlot3D 6 populations
+    |> Seq.iter (fun (label, x, y, z, c) -> printfn "%d,\"%s\",%f,%f,%f" c label x y z)

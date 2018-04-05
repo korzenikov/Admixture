@@ -65,7 +65,8 @@
     <Compile Include="EthnoPlots.fs" />
     <Compile Include="K36.fs" />
     <Compile Include="GeneticOracles.fs" />
-    <None Include="Oracles.fsx" />
+    <Compile Include="RawData.fs" />
+    <Compile Include="Phasing.fs" />
     <None Include="Phasing.fsx" />
     <None Include="GeneticOracles.fsx" />
     <None Include="EthnoPlot.fsx" />
