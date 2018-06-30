@@ -5,6 +5,13 @@ open FSharp.Charting
 open Accord.MachineLearning
 open Admixture.Populations
 
+type Cluster = {
+        x: seq<float>
+        y: seq<float>
+        z: seq<float>
+        label: seq<string>
+    }
+
 let abbreviations =
         [ 
             ("Russian", "RU")
@@ -23,6 +30,7 @@ let abbreviations =
         ]
 
 let getTransform data =
+    
     let pca = new PrincipalComponentAnalysis()
 
     pca.Method <- PrincipalComponentMethod.Standardize
@@ -99,7 +107,7 @@ let showEthnoPlot3D k populations =
 
     let clusters = data |> clustering.Decide
 
-    let labels = populations |> Array.map (fun x -> x.Label) |> Array.map (fun x -> abbreviations |> Seq.fold (fun (acc : string) (l, s) -> acc.Replace(l, s)) x)
+    let labels = populations |> Array.map (fun x -> x.Label)// |> Array.map (fun x -> abbreviations |> Seq.fold (fun (acc : string) (l, s) -> acc.Replace(l, s)) x)
 
     data |> transform.Transform |> Array.mapi (fun i x -> labels.[i], x.[0], x.[1], x.[2], clusters.[i])
 
@@ -184,7 +192,7 @@ let showSamplesOnEthnoPlot3D k populations  (samples:seq<float[]>) =
     let sampleLabels =
         sampleData |> Array.mapi (fun i _ -> sprintf "Test Person %d" ( i + 1))
 
-    let labels = populations |> Array.map (fun x -> x.Label) |> Array.map (fun x -> abbreviations |> Seq.fold (fun (acc : string) (l, s) -> acc.Replace(l, s)) x)
+    let labels = populations |> Array.map (fun x -> x.Label)// |> Array.map (fun x -> abbreviations |> Seq.fold (fun (acc : string) (l, s) -> acc.Replace(l, s)) x)
 
     let populationOutput = data |> transform.Transform |> Array.mapi (fun i x -> labels.[i], x.[0], x.[1], x.[2], clusters.[i])
 
@@ -227,3 +235,21 @@ let showSamplesOnEthnoPlotOwnClustersOnly k populations (samples:seq<float[]>) =
     |> Chart.Combine
     |> Chart.WithXAxis(MajorGrid = ChartTypes.Grid(Enabled=false)) |> Chart.WithYAxis(MajorGrid = ChartTypes.Grid(Enabled=false))
     |> Chart.Show
+
+let convertToCluster g =
+     {
+        label = g |> Seq.map (fun (l, x, y, z, c) -> l)
+        x = g |> Seq.map (fun (l, x, y, z, c) -> x)
+        y = g |> Seq.map (fun (l, x, y, z, c) -> y)
+        z = g |> Seq.map (fun (l, x, y, z, c) -> z)
+     }
+
+let getEthnoPlot3DClusters k populations =
+    showEthnoPlot3D k populations 
+    |> Seq.groupBy(fun (_, _, _, _, c) -> c)
+    |> Seq.map (fun (_, g) -> g |> convertToCluster)
+
+let getEthnoPlot3DWithSamplesClusters k populations (samples:seq<float[]>) =
+    showSamplesOnEthnoPlot3D k populations samples 
+    |> Seq.groupBy(fun (_, _, _, _, c) -> c)
+    |> Seq.map (fun (_, g) -> g |> convertToCluster)
