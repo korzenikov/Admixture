@@ -7,7 +7,7 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Admixture", "Admixture.fspr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdmixtureWeb", "..\AdmixtureWeb\AdmixtureWeb.csproj", "{807C51DD-B923-41D3-BF01-8C8F4E384EB5}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "AdmixtureLib", "..\AdmixtureLib\AdmixtureLib.fsproj", "{A8BF925B-FBBC-4B0C-A783-555330032BB2}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "AdmixtureLib", "..\AdmixtureLib\AdmixtureLib.fsproj", "{A8BF925B-FBBC-4B0C-A783-555330032BB2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

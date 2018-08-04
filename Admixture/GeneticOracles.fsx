@@ -1,4 +1,4 @@
-﻿#r @"D:\Repos\Admixture\Admixture\packages\GAF.2.3.1\lib\net461\GAF.461.dll"
+﻿#r @"packages\GAF.2.3.1\lib\net461\GAF.461.dll"
 #load "Populations.fs"
 #load "K36.fs"
 #load "Oracles.fs"
