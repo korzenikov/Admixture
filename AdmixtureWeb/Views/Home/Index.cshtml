@@ -3,45 +3,39 @@
 }
 
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-<script src="http://d3js.org/d3.v3.min.js"></script>
 <!-- Plotly chart will be drawn inside this DIV -->
-<div id="myDiv" style="width:1400px;height:1000px"></div>
+<div id="myDiv"/>
 <script>
     var data =@Html.Raw(ViewData["Data"]);
     var clusters = new Array();
     for (var i in data) {
+        var clusterName;
+        if (data[i].index == -1)
+            clusterName = "Samples";
+        else
+            clusterName = "Cluster " + i;
 
         var cluster = {
-            name: 'cluster ' + i,
+            name: clusterName,
             x: data[i].x,
             y: data[i].y,
             z: data[i].z,
             text: data[i].label,
-            mode: 'markers+text',
+            mode: "markers+text",
             marker: {
                 size: 5,
                 opacity: 0.8
             },
-            type: 'scatter3d'
+            type: "scatter3d"
         };
         clusters.push(cluster);
     }
 
-    //clusters[0].textfont =
-    //    {
-    //        family: "Arial, sans-serif",
-    //        size: 12,
-    //        color: "#FF0000"
-    //    };
-
     var layout = {
-        dragmode: true,
-        margin: {
-            l: 0,
-            r: 0,
-            b: 0,
-            t: 0
-        }
+        title: "PCA 3D",
+        width: 1000,
+        height: 1000
     };
-    Plotly.newPlot('myDiv', clusters, layout);
+
+    Plotly.newPlot("myDiv", clusters, layout);
 </script>

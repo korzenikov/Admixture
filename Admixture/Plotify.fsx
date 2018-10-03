@@ -43,7 +43,7 @@ let layout =
                         color = "grey"
                     )
             ),
-        title ="Data Labels on the Plot",
+        title ="PCA 3D",
         width = 1600.,
         height = 1200.
     )
