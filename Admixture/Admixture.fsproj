@@ -69,11 +69,10 @@
     <Compile Include="RawData.fs" />
     <Compile Include="Phasing.fs" />
     <None Include="Phasing.fsx" />
-    <Compile Include="VisualEthnoPlots.fs" />
     <None Include="GeneticOracles.fsx" />
-    <None Include="EthnoPlot.fsx" />
     <Content Include="Google.DataTable.Net.Wrapper.XML" />
     <None Include="Plotify.fsx" />
+    <None Include="AdmixInputFileGenerator.fsx" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Accord">

@@ -48,6 +48,3 @@ let convertToArray c =
                         match map.TryFind x with
                         | Some v -> v
                         | None -> 0.0)
-
-
-

@@ -7,72 +7,29 @@
 
 #load "Populations.fs"
 #load "EthnoPlots.fs"
-#load "K36.fs"
  
 open XPlot.Plotly
-
-
-
 open System
 open Admixture.Populations
 open Admixture.EthnoPlots
 
-let components, populations = getPopulations ',' "D:\Populations\K15.csv"
+let _, populations = getPopulations ',' "D:\Populations\K15.csv"
 
- 
-//let trace1 =
-//    Scatter(
-//        x = [1; 2; 3; 4; 5],
-//        y = [1; 6; 3; 6; 1],
-//        mode = "markers+text",
-//        name = "Team A",
-//        text = ["A-1"; "A-2"; "A-3"; "A-4"; "A-5"],
-//        textposition = "top center",
-//        textfont = Textfont(family = "Raleway; sans-serif"),
-//        marker = Marker(size = 12.)
-//    )
-
-//let trace2 =
-//    Scatter(
-//        x = [1.5; 2.5; 3.5; 4.5; 5.5],
-//        y = [4; 1; 7; 1; 4],
-//        mode = "markers+text",
-//        name = "Team B",
-//        text = ["B-a"; "B-b"; "B-c"; "B-d"; "B-e"],
-//        textfont = Textfont(family = "Times New Roman"),
-//        textposition = "bottom center",
-//        marker = Marker(size = 12.)
-//    )
-
-//let data =
-//    getEthnoPlot3DClusters 6 populations
-//    |> Seq.mapi (fun i c -> 
-//                    Scatter3d(
-//                        x = c.x,
-//                        y = c.y,
-//                        z = c.z,
-//                        mode = "markers",
-//                        name = sprintf "C %d" (i+1),
-//                        text = c.label,
-//                        marker = Marker(size = 6.)
-
-//                    )
-                            
-//                )
+let _, samples = getPopulations ',' "D:\Populations\K15samples.csv"
 
 let data =
-    getEthnoPlot3DClusters 6 populations
+    getEthnoPlot3DWithSamplesClusters 6 populations samples
     |> Seq.mapi (fun i c -> 
-                    Scatter(
+                    let clusterName = if c.index = -1 then "Samples" else (sprintf "C %d" (i+1))
+                    Scatter3d(
                         x = c.x,
                         y = c.y,
-                        mode = "markers",
-                        name = sprintf "C %d" (i+1),
+                        z = c.z,
+                        mode = "markers+text",
+                        name = clusterName,
                         text = c.label,
                         marker = Marker(size = 6.)
-
                     )
-                            
                 )
 
 let layout =

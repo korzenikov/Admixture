@@ -13,11 +13,11 @@ let getSnp chr pos (snps:Map<string,_>) =
 let noCall x = x.Allele1.IsNone || x.Allele2.IsNone
 
 
-//let sonSNPs = readFromFile @"D:\DNA\Andrei.csv" |> Array.groupBy (fun x -> x.Chromosome) |> Map.ofArray
+//let sonSNPs = readFromFile @"D:\DNA\Son.csv" |> Array.groupBy (fun x -> x.Chromosome) |> Map.ofArray
 
-//let motherSNPs = readFromFile @"D:\Mother.csv" |> Array.groupBy (fun x -> x.Chromosome) |> Map.ofArray
+//let motherSNPs = readFromFile @"D:\DNA\Mother.csv" |> Array.groupBy (fun x -> x.Chromosome) |> Map.ofArray
 
-//phase sonSNPs motherSNPs |> outputToFile @"D:\phased.csv"
+//phase sonSNPs motherSNPs |> outputToFile @"D:\DNA\phased.csv"
 
 let getSnpByRSID rsid (snps:Map<string,SNP>) =
     match snps.TryFind rsid with
@@ -27,7 +27,7 @@ let getSnpByRSID rsid (snps:Map<string,SNP>) =
         (None, None)
 
 
-let snps = readFromFile @"D:\DNA\Andrei.csv" |> Array.groupBy (fun x -> x.RSID) |> Array.map (fun (k, g) -> (k, g |> Array.exactlyOne)) |> Map.ofArray
+let snps = readFromFile @"D:\DNA\Son.csv" |> Array.groupBy (fun x -> x.RSID) |> Array.map (fun (k, g) -> (k, g |> Array.exactlyOne)) |> Map.ofArray
 
 
 type ReferenceFile = CsvProvider<"D:\DNA\Reference.csv">
