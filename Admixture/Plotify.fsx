@@ -1,4 +1,4 @@
-﻿#r @"packages\XPlot.Plotly.1.4.2\lib\net45\XPlot.Plotly.dll"
+﻿#r @"packages\XPlot.Plotly.1.5.0\lib\net45\XPlot.Plotly.dll"
 #r @"packages\Accord.3.8.0\lib\net46\Accord.dll"
 #r @"packages\Accord.Math.3.8.0\lib\net46\Accord.Math.dll"
 #r @"packages\Accord.Math.3.8.0\lib\net46\Accord.Math.Core.dll"
@@ -12,6 +12,25 @@ open XPlot.Plotly
 open System
 open Admixture.Populations
 open Admixture.EthnoPlots
+
+let convertToCluster i g =
+     {
+        index = i
+        label = g |> Seq.map (fun (l, x, y, z, c) -> l)
+        x = g |> Seq.map (fun (l, x, y, z, c) -> x)
+        y = g |> Seq.map (fun (l, x, y, z, c) -> y)
+        z = g |> Seq.map (fun (l, x, y, z, c) -> z)
+     }
+
+let getEthnoPlot3DClusters k populations =
+    getEthnoPlot3D k populations 
+    |> Seq.groupBy(fun (_, _, _, _, c) -> c)
+    |> Seq.map (fun (i, g) -> g |> convertToCluster i)
+
+let getEthnoPlot3DWithSamplesClusters k populations samples =
+    getEthnoPlot3DWithSamples k populations samples
+    |> Seq.groupBy(fun (_, _, _, _, c) -> c)
+    |> Seq.map (fun (i, g) -> g |> convertToCluster i)
 
 let _, populations = getPopulations ',' "D:\Populations\K15.csv"
 
@@ -44,7 +63,7 @@ let layout =
                     )
             ),
         title ="PCA 3D",
-        width = 1600.,
+        width = 1200.,
         height = 1200.
     )
 

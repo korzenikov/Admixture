@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using AdmixtureWeb.Models;
 using Admixture;
 using Newtonsoft.Json;
+using System.Linq;
 
 namespace AdmixtureWeb.Controllers
 {
@@ -37,7 +38,18 @@ namespace AdmixtureWeb.Controllers
         {
             var populations = Populations.getPopulations(',', @"D:\Populations\K36.csv");
             var samples = Populations.getPopulations(',', @"D:\Populations\K36samples.csv");
-            var clusters = EthnoPlots.getEthnoPlot3DWithSamplesClusters(6, populations.Item2, samples.Item2);
+            var results = EthnoPlots.getEthnoPlot3DWithSamples(6, populations.Item2, samples.Item2);
+            var clusters = results.GroupBy(i => i.Item5).Select(
+                g =>
+                    new
+                    {
+                        index = g.Key,
+                        label = g.Select(i => i.Item1),
+                        x = g.Select(i => i.Item2),
+                        y = g.Select(i => i.Item3),
+                        z = g.Select(i => i.Item4),
+                    }
+            );
             return JsonConvert.SerializeObject(clusters);
         }
     }

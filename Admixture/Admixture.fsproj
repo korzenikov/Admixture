@@ -73,6 +73,7 @@
     <Content Include="Google.DataTable.Net.Wrapper.XML" />
     <None Include="Plotify.fsx" />
     <None Include="AdmixInputFileGenerator.fsx" />
+    <None Include="Scatter.fsx" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Accord">
@@ -90,50 +91,26 @@
     <Reference Include="Accord.Statistics">
       <HintPath>packages\Accord.Statistics.3.8.0\lib\net46\Accord.Statistics.dll</HintPath>
     </Reference>
-    <Reference Include="CSharpFormat">
-      <HintPath>packages\FSharp.Formatting.2.14.4\lib\net40\CSharpFormat.dll</HintPath>
-    </Reference>
     <Reference Include="Deedle">
       <HintPath>packages\Deedle.1.2.5\lib\net40\Deedle.dll</HintPath>
     </Reference>
-    <Reference Include="Deedle.RProvider.Plugin">
-      <HintPath>packages\Deedle.RPlugin.1.2.5\lib\net40\Deedle.RProvider.Plugin.dll</HintPath>
-    </Reference>
     <Reference Include="DynamicInterop">
-      <HintPath>packages\DynamicInterop.0.7.4\lib\net40\DynamicInterop.dll</HintPath>
+      <HintPath>packages\DynamicInterop.0.9.1\lib\netstandard2.0\DynamicInterop.dll</HintPath>
     </Reference>
     <Reference Include="FSharp.Charting">
-      <HintPath>packages\FSharp.Charting.0.90.14\lib\net40\FSharp.Charting.dll</HintPath>
-    </Reference>
-    <Reference Include="FSharp.CodeFormat">
-      <HintPath>packages\FSharp.Formatting.2.14.4\lib\net40\FSharp.CodeFormat.dll</HintPath>
+      <HintPath>packages\FSharp.Charting.2.1.0\lib\net45\FSharp.Charting.dll</HintPath>
     </Reference>
     <Reference Include="FSharp.Compiler.Service">
-      <HintPath>packages\FSharp.Compiler.Service.2.0.0.6\lib\net45\FSharp.Compiler.Service.dll</HintPath>
+      <HintPath>packages\FSharp.Compiler.Service.25.0.1\lib\net45\FSharp.Compiler.Service.dll</HintPath>
     </Reference>
     <Reference Include="FSharp.Core">
-      <HintPath>packages\FSharp.Core.4.5.1\lib\net45\FSharp.Core.dll</HintPath>
+      <HintPath>packages\FSharp.Core.4.5.2\lib\net45\FSharp.Core.dll</HintPath>
     </Reference>
     <Reference Include="FSharp.Data">
-      <HintPath>packages\FSharp.Data.2.3.2\lib\net40\FSharp.Data.dll</HintPath>
-    </Reference>
-    <Reference Include="FSharp.Formatting.Common">
-      <HintPath>packages\FSharp.Formatting.2.14.4\lib\net40\FSharp.Formatting.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="FSharp.Literate">
-      <HintPath>packages\FSharp.Formatting.2.14.4\lib\net40\FSharp.Literate.dll</HintPath>
-    </Reference>
-    <Reference Include="FSharp.Markdown">
-      <HintPath>packages\FSharp.Formatting.2.14.4\lib\net40\FSharp.Markdown.dll</HintPath>
-    </Reference>
-    <Reference Include="FSharp.MetadataFormat">
-      <HintPath>packages\FSharp.Formatting.2.14.4\lib\net40\FSharp.MetadataFormat.dll</HintPath>
+      <HintPath>packages\FSharp.Data.2.4.6\lib\net45\FSharp.Data.dll</HintPath>
     </Reference>
     <Reference Include="FSharpVSPowerTools.Core">
-      <HintPath>packages\FSharpVSPowerTools.Core.2.3.0\lib\net45\FSharpVSPowerTools.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="FsLab.Runner">
-      <HintPath>packages\FsLab.Runner.1.0.2\lib\net40\FsLab.Runner.dll</HintPath>
+      <HintPath>packages\FSharpVSPowerTools.Core.2.4.0\lib\net45\FSharpVSPowerTools.Core.dll</HintPath>
     </Reference>
     <Reference Include="GAF.461">
       <HintPath>packages\GAF.2.3.1\lib\net461\GAF.461.dll</HintPath>
@@ -141,47 +118,32 @@
     <Reference Include="Google.DataTable.Net.Wrapper">
       <HintPath>packages\Google.DataTable.Net.Wrapper.3.1.2.0\lib\Google.DataTable.Net.Wrapper.dll</HintPath>
     </Reference>
-    <Reference Include="Google.Protobuf">
-      <HintPath>packages\Google.Protobuf.3.6.0\lib\net45\Google.Protobuf.dll</HintPath>
-    </Reference>
+    <Reference Include="ISymWrapper" />
     <Reference Include="MathNet.Numerics">
-      <HintPath>packages\MathNet.Numerics.3.13.1\lib\net40\MathNet.Numerics.dll</HintPath>
+      <HintPath>packages\MathNet.Numerics.4.5.1\lib\net461\MathNet.Numerics.dll</HintPath>
     </Reference>
     <Reference Include="MathNet.Numerics.FSharp">
-      <HintPath>packages\MathNet.Numerics.FSharp.3.13.1\lib\net40\MathNet.Numerics.FSharp.dll</HintPath>
+      <HintPath>packages\MathNet.Numerics.FSharp.4.5.1\lib\net45\MathNet.Numerics.FSharp.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="Newtonsoft.Json">
-      <HintPath>packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="RazorEngine">
-      <HintPath>packages\FSharp.Formatting.2.14.4\lib\net40\RazorEngine.dll</HintPath>
-    </Reference>
-    <Reference Include="RDotNet">
-      <HintPath>packages\R.NET.Community.1.6.5\lib\net40\RDotNet.dll</HintPath>
-    </Reference>
-    <Reference Include="RDotNet.FSharp">
-      <HintPath>packages\R.NET.Community.FSharp.1.6.5\lib\net40\RDotNet.FSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="RDotNet.NativeLibrary">
-      <HintPath>packages\R.NET.Community.1.6.5\lib\net40\RDotNet.NativeLibrary.dll</HintPath>
-    </Reference>
-    <Reference Include="RProvider">
-      <HintPath>packages\RProvider.1.1.20\lib\net40\RProvider.dll</HintPath>
-    </Reference>
-    <Reference Include="RProvider.Runtime">
-      <HintPath>packages\RProvider.1.1.20\lib\net40\RProvider.Runtime.dll</HintPath>
-    </Reference>
-    <Reference Include="Suave">
-      <HintPath>packages\Suave.1.1.3\lib\net40\Suave.dll</HintPath>
+      <HintPath>packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.CodeDom">
       <HintPath>packages\System.CodeDom.4.5.0\lib\net461\System.CodeDom.dll</HintPath>
     </Reference>
+    <Reference Include="System.Collections.Immutable">
+      <HintPath>packages\System.Collections.Immutable.1.5.0\lib\netstandard2.0\System.Collections.Immutable.dll</HintPath>
+    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IO" />
     <Reference Include="System.Numerics" />
+    <Reference Include="System.Reflection.Metadata">
+      <HintPath>packages\System.Reflection.Metadata.1.6.0\lib\netstandard2.0\System.Reflection.Metadata.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Threading.Tasks.Dataflow">
       <HintPath>packages\System.Threading.Tasks.Dataflow.4.9.0\lib\netstandard2.0\System.Threading.Tasks.Dataflow.dll</HintPath>
@@ -190,20 +152,17 @@
       <HintPath>packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Web.Razor">
-      <HintPath>packages\FSharp.Formatting.2.14.4\lib\net40\System.Web.Razor.dll</HintPath>
-    </Reference>
     <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="XPlot.GoogleCharts">
-      <HintPath>packages\XPlot.GoogleCharts.1.4.2\lib\net45\XPlot.GoogleCharts.dll</HintPath>
+      <HintPath>packages\XPlot.GoogleCharts.1.5.0\lib\net45\XPlot.GoogleCharts.dll</HintPath>
     </Reference>
     <Reference Include="XPlot.GoogleCharts.Deedle">
-      <HintPath>packages\XPlot.GoogleCharts.Deedle.1.4.2\lib\net45\XPlot.GoogleCharts.Deedle.dll</HintPath>
+      <HintPath>packages\XPlot.GoogleCharts.Deedle.1.5.0\lib\net45\XPlot.GoogleCharts.Deedle.dll</HintPath>
     </Reference>
     <Reference Include="XPlot.Plotly">
-      <HintPath>packages\XPlot.Plotly.1.4.2\lib\net45\XPlot.Plotly.dll</HintPath>
+      <HintPath>packages\XPlot.Plotly.1.5.0\lib\net45\XPlot.Plotly.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Import Project="packages\Accord.3.8.0\build\Accord.targets" Condition="Exists('packages\Accord.3.8.0\build\Accord.targets')" />
