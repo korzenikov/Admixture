@@ -1,5 +1,3 @@
-using System;
-
 namespace AdmixtureWeb.Models
 {
     public class ErrorViewModel
