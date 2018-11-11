@@ -1,12 +1,29 @@
 ﻿using System.Diagnostics;
+using System.Linq;
+using AdmixtureWeb.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace AdmixtureWeb.Models
+namespace AdmixtureWeb.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        private Repository repository;
+
+        public HomeController()
         {
+            repository = new Repository();
+        }
+
+        public IActionResult Index(int id, int k)
+        {
+            if (k < 1 || k > 10)
+            {
+                k = 6;
+            }
+            ViewBag.Calculators = new SelectList(repository.GetCalculators(), nameof(Calculator.Id), nameof(Calculator.Name), id);
+            ViewBag.Clusters = Enumerable.Range(1, 10).Select(i => new SelectListItem(i.ToString(), i.ToString(), i == k)).ToArray();
+                    
             return View();
         }
 

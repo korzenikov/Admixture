@@ -4,51 +4,131 @@
 
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 <!-- Plotly chart will be drawn inside this DIV -->
+@Html.Label("Calculators")
+@Html.DropDownList("Calculators", "Select Calculator")
+@Html.Label("Clusters")
+@Html.DropDownList("Clusters", "Select clusters")
 <div id="progressIndicator">
     <h1>Loading...</h1>
 </div>
-<div id="myDiv" >
+<div id="myDiv">
 </div>
-@section Scripts
-{
+@section Scripts {
     <script>
-        $("#progressIndicator").show();
-        $.ajax({
-            url : "/api/populations",
-            success: function (data) {
-                var clusters = new Array();
-                for (var i in data) {
-                    var clusterName;
-                    if (data[i].index == -1)
-                        clusterName = "Samples";
-                    else
-                        clusterName = "Cluster " + i;
+        function updateUrlParameter(uri, key, value) {
+            // remove the hash part before operating on the uri
+            var i = uri.indexOf('#');
+            var hash = i === -1 ? '' : uri.substr(i);
+            uri = i === -1 ? uri : uri.substr(0, i);
 
-                    var cluster = {
-                        name: clusterName,
-                        x: data[i].x,
-                        y: data[i].y,
-                        z: data[i].z,
-                        text: data[i].label,
-                        mode: "markers+text",
-                        marker: {
-                            size: 5,
-                            opacity: 0.8
-                        },
-                        type: "scatter3d"
+            var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+            var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+            if (uri.match(re)) {
+                uri = uri.replace(re, '$1' + key + "=" + value + '$2');
+            } else {
+                uri = uri + separator + key + "=" + value;
+            }
+            return uri + hash;  // finally append the hash as well
+        }
+
+        function updateWindowLocation(id, k) {
+
+            var uri = updateUrlParameter(window.location.href, "id", id);
+            uri = updateUrlParameter(uri, "k", k);
+
+            var stateObj = { id: id, k: k };
+            window.history.pushState(stateObj, window.title, uri);
+        }
+
+        function loadCalculator(id, k) {
+            $("#myDiv").hide();
+            $("#progressIndicator").show();
+            $.ajax({
+                url: "/api/populations/" + id + "?k=" + k,
+                success: function (data) {
+                    var clusters = new Array();
+                    for (var i in data) {
+                        var clusterName;
+                        if (data[i].index == -1)
+                        {
+                            clusterName = "Samples";
+                        }
+                        else
+                        {
+                            var index = parseInt(i) + 1;
+                            clusterName = "Cluster " + index;
+                        }
+
+                        var cluster = {
+                            name: clusterName,
+                            x: data[i].x,
+                            y: data[i].y,
+                            z: data[i].z,
+                            text: data[i].label,
+                            mode: "markers+text",
+                            marker: {
+                                size: 5,
+                                opacity: 0.8
+                            },
+                            type: "scatter3d"
+                        };
+                        clusters.push(cluster);
+                    }
+
+                    var layout = {
+                        title: "PCA 3D",
+                        width: 1000,
+                        height: 1000
                     };
-                    clusters.push(cluster);
+
+                    $("#myDiv").show();
+                    Plotly.newPlot("myDiv", clusters, layout);
+                    $("#progressIndicator").hide();
+                   
+                },
+                error: function () {
+                    $("#progressIndicator").hide();
                 }
 
-                var layout = {
-                    title: "PCA 3D",
-                    width: 1000,
-                    height: 1000
-                };
+            });
+        }
 
-                Plotly.newPlot("myDiv", clusters, layout);
-                $("#progressIndicator").hide();
-            }
+        var reloading;
+
+        $("#Calculators").on("change", function () {
+            if (reloading) return;
+            var id = $("#Calculators").val();
+            var k = $("#Clusters").val();
+            loadCalculator(id, k, true);
+
+            updateWindowLocation(id, k);
         });
+
+        $("#Clusters").on("change", function () {
+            if (reloading) return;
+            var id = $("#Calculators").val();
+            var k = $("#Clusters").val();
+            loadCalculator(id, k);
+
+            updateWindowLocation(id, k);
+        });
+
+        window.onpopstate = function (event) {
+            if (event.state) {
+                reloading = true;
+                $("#Calculators").val(event.state.id).change();
+                $("#Clusters").val(event.state.k).change();
+                reloading = false;
+                loadCalculator(event.state.id, event.state.k);
+            }
+        }
+               
+        $("#progressIndicator").hide();
+        
+        if ($("#Calculators").val() != "") {
+            var id = $("#Calculators").val();
+            var k = $("#Clusters").val();
+            loadCalculator(id, k);
+        }
     </script>
 }

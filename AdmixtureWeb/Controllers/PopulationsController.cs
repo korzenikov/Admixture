@@ -1,19 +1,33 @@
 ﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Admixture;
-using System.Collections.Generic;
+using AdmixtureWeb.Models;
 
-namespace AdmixtureWeb.Models
+namespace AdmixtureWeb.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class PopulationsController : ControllerBase
     {
-        public IEnumerable<Cluster> Get()
-        {
-            var populations = Populations.getPopulations(',', @"D:\Populations\K15.csv");
+        private readonly Repository repository;
 
-            var results = EthnoPlots.getEthnoPlot3D(6, populations.Item2);
+        public PopulationsController()
+        {
+            repository = new Repository();
+        }
+        
+        [Route("{id}")]
+        public IActionResult Get(int id, int k)
+        {
+            var calculator = repository.GetCalculator(id);
+            if (calculator == null)
+            {
+                return NotFound();
+            }
+
+            var populations = Populations.getPopulations(',', @"D:\Populations\" + calculator.FileName);
+
+            var results = EthnoPlots.getEthnoPlot3D(k == 0 ? 6 : k, populations.Item2);
             var clusters = results.GroupBy(i => i.Item5).Select(
                 g =>
                     new Cluster
@@ -26,7 +40,7 @@ namespace AdmixtureWeb.Models
                     }
             );
 
-            return clusters;
+            return Ok(clusters);
         }
     }
 }
