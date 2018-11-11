@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Admixture;
 using AdmixtureWeb.Models;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
 
 namespace AdmixtureWeb.Controllers
 {
@@ -10,10 +12,12 @@ namespace AdmixtureWeb.Controllers
     public class PopulationsController : ControllerBase
     {
         private readonly Repository repository;
+        private readonly IHostingEnvironment hostingEnvironment;
 
-        public PopulationsController()
+        public PopulationsController(IHostingEnvironment environment)
         {
             repository = new Repository();
+            hostingEnvironment = environment;
         }
         
         [Route("{id}")]
@@ -25,7 +29,9 @@ namespace AdmixtureWeb.Controllers
                 return NotFound();
             }
 
-            var populations = Populations.getPopulations(',', @"D:\Populations\" + calculator.FileName);
+            var folder = Path.Combine(hostingEnvironment.WebRootPath, "files");
+
+            var populations = Populations.getPopulations(',', Path.Combine(folder, calculator.FileName));
 
             var results = EthnoPlots.getEthnoPlot3D(k == 0 ? 6 : k, populations.Item2);
             var clusters = results.GroupBy(i => i.Item5).Select(
