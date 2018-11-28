@@ -5,8 +5,7 @@ open Admixture.ComponentParser
 
 let getRefComponents path = 
     let lines = File.ReadAllLines(path) 
-    let numOfComponents = lines.[0].Split([|' '|]).[0] |> int
-    lines.[1..numOfComponents]
+    lines.[0].Split([|','|]).[1..]
 
 let outputToFile (referenceFile:string) inputFile (outputFile:string) = 
     use sw = new StreamWriter(outputFile)
@@ -15,26 +14,31 @@ let outputToFile (referenceFile:string) inputFile (outputFile:string) =
         let refComponents = getRefComponents referenceFile
         match components |> getInvalidComponents refComponents with
         | None ->
-            sw.WriteLine "Person"
-            sw.WriteLine referenceFile
-            sw.WriteLine "Output.txt"
-            sw.WriteLine "20     {Quantity of approximations}"
-            sw.WriteLine "0.25    {Threshold of components to ignore noice (-1 for autodetect)}"
-            sw.WriteLine "1      {1 for enable gaussian method or 0 for disable}"
+            refComponents 
+            |> Seq.append ["Population"]
+            |> String.concat ","
+            |> sw.WriteLine
         
             let componentMap = components |> Map.ofArray
-            for n in refComponents do
-                let pct =
+            let sampleComponents = 
+                refComponents |> Seq.map(fun n -> 
                     match componentMap.TryFind n with
                     | Some v ->
                         v
                     | None ->
-                        0M
-                sw.WriteLine (sprintf "%M     %s" pct n)
+                        0M)
+            
+            sampleComponents 
+            |> Seq.map string 
+            |> Seq.append ["Sample"] 
+            |> String.concat "," 
+            |> sw.WriteLine
             Ok "Done"
         | Some invalidComponents -> 
             Error (sprintf "Invalid components: %s" <| (invalidComponents |> String.concat ", "))
              
     | Error e -> Error e
 
-outputToFile "D:\Admix4\k36_v1.txt" "D:\Admix4\components.txt" "D:\Admix4\input.txt"
+outputToFile @"D:\nMonte\k36.csv" @"D:\nMonte\components.txt" @"D:\nMonte\k36sample.csv"
+
+getRefComponents @"D:\nMonte\k36.csv"

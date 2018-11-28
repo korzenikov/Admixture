@@ -68,12 +68,17 @@
     <Compile Include="GeneticOracles.fs" />
     <Compile Include="RawData.fs" />
     <Compile Include="Phasing.fs" />
+    <Compile Include="ComponentParser.fs" />
     <None Include="Phasing.fsx" />
     <None Include="GeneticOracles.fsx" />
     <Content Include="Google.DataTable.Net.Wrapper.XML" />
     <None Include="Plotify.fsx" />
     <None Include="AdmixInputFileGenerator.fsx" />
+    <None Include="GoogleScatter.fsx" />
+    <None Include="Geo.fsx" />
+    <None Include="nMonteFileGenerator.fsx" />
     <None Include="Scatter.fsx" />
+    <None Include="SnpReader.fsx" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Accord">

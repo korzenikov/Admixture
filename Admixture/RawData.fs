@@ -7,7 +7,7 @@ type Nucleotide = A | G | C | T
 
 type SNP = 
     { 
-        RSID:string
+        RSID: string
         Chromosome : string
         Position: int
         Allele1: Nucleotide option

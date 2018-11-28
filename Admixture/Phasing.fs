@@ -2,33 +2,36 @@
 
 open Admixture.RawData
 
-let align a1 a2 =
-    let a1 = a1 |> Array.sortBy (fun x -> x.Position)
-    let a2 = a2 |> Array.sortBy (fun x -> x.Position)
-    seq { 
-        let mutable i = 0
-        let mutable j = 0
-        
-        while (i < a1.Length && j < a2.Length) do
-            if a1.[i].Position < a2.[j].Position then 
-                yield Some a1.[i], None
-                i <- i + 1
-            elif a1.[i].Position > a2.[j].Position then
-                yield None, Some a2.[j]
-                j <- j + 1
-            else
-                yield Some a1.[i], Some a2.[j]
-                i <- i + 1
-                j <- j + 1
+let align a1 a2 offsetFunc =
 
-        while (i < a1.Length) do
-            yield Some a1.[i], None
-            i <- i + 1
+    let a1 = a1 |> Array.sortBy offsetFunc
+    let a2 = a2 |> Array.sortBy offsetFunc
 
-        while (j < a2.Length) do
-            yield None, Some a2.[j]
-            j <- j + 1
-    }
+    let rec alignRec i j =
+        seq { 
+            if (i < a1.Length && j < a2.Length) then
+                let offsetI = offsetFunc a1.[i]
+                let offsetJ = offsetFunc a2.[j]
+
+                if offsetI < offsetJ then 
+                    yield Some a1.[i], None
+                    yield! alignRec (i + 1) j
+
+                elif offsetI > offsetJ then
+                    yield None, Some a2.[j]
+                    yield! alignRec i (j + 1)
+                else
+                    yield Some a1.[i], Some a2.[j]
+                    yield! alignRec (i + 1) (j + 1)
+
+            elif (i < a1.Length) then
+                yield! a1.[i..] |> Seq.map (fun x -> Some x, None)
+
+            elif (j < a2.Length) then
+                yield! a2.[j..] |> Seq.map (fun x ->  None, Some x)
+        }
+
+    alignRec 0 0
 
 let phaseAlleles ch p =
     match ch with
@@ -61,6 +64,6 @@ let phaseSNP ch p =
 let phase (childSNPs:Map<_,_>) (parentSNPs:Map<_,_>) =
     [1..22] 
     |> Seq.map (fun x -> x.ToString()) 
-    |> Seq.collect (fun x-> align childSNPs.[x] parentSNPs.[x] |> Seq.map (fun (ch, p) -> phaseSNP ch p) )
+    |> Seq.collect (fun x-> align childSNPs.[x] parentSNPs.[x] (fun x -> x.Position) |> Seq.map (fun (ch, p) -> phaseSNP ch p) )
     |> Seq.where (fun x -> x.IsSome) 
     |> Seq.map (fun x -> x.Value)
